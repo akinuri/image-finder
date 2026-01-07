@@ -1,0 +1,23 @@
+{
+    "name": "image-finder",
+    "version": "1.0.0",
+    "description": "Scan a dir for images",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/akinuri/image-finder.git"
+    },
+    "author": "Noreh AD",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/akinuri/image-finder/issues"
+    },
+    "homepage": "https://github.com/akinuri/image-finder#readme",
+    "devDependencies": {
+        "electron": "^39.2.7"
+    }
+}
