@@ -1,14 +1,43 @@
-const { app, BrowserWindow } = require("electron/main");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
+const { scanDirectory } = require("./utils");
+
+let mainWindow;
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        webPreferences: {
+            preload: require("path").join(__dirname, "preload.js"),
+        },
     });
-    win.loadFile("index.html");
+    mainWindow.loadFile("index.html");
 };
 
 app.whenReady().then(() => {
+    // IPC handler for folder selection
+    ipcMain.handle("select-folder", async () => {
+        const result = await dialog.showOpenDialog(mainWindow, {
+            properties: ['openDirectory'],
+            title: 'Select Folder to Scan'
+        });
+        
+        if (!result.canceled && result.filePaths.length > 0) {
+            return result.filePaths[0];
+        }
+        return null;
+    });
+    
+    // IPC handler for scanning files
+    ipcMain.handle("scan-files", async (event, folderPath) => {
+        try {
+            const files = await scanDirectory(folderPath || "C:\\php");
+            return { success: true, files };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+    
     createWindow();
 
     // macOS: Re-create window when dock icon is clicked and no other windows are open

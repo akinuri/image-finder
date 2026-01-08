@@ -5,17 +5,82 @@
     <meta charset="UTF-8" />
     <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
     <meta
         http-equiv="X-Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
     />
     <title>Electron App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 1rem;
+        }
+        .controls {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .controls label {
+            font-weight: bold;
+        }
+        .controls input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #selectedPath {
+            margin: 10px 0;
+            color: #666;
+            font-family: monospace;
+        }
+        #files {
+            margin-top: 1rem;
+            max-height: calc(100vh - 13rem);
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            padding-left: 2.5rem;
+            list-style: decimal;
+        }
+        .file {
+            font-family: monospace;
+            line-height: 1.75;
+        }
+    </style>
 </head>
 
 <body>
-    
+    <div class="controls">
+        <label>Path:</label>
+        <input type="text" id="dirInput" placeholder="Enter folder path...">
+        <button id="selectBtn">Select Folder</button>
+        <button id="scanBtn" disabled>Scan</button>
+    </div>
+    <div id="status"></div>
+    <ul id="files"></ul>
 </body>
 
 <script src="./renderer.js"></script>
