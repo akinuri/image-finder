@@ -11,6 +11,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
     createWindow();
 
+    // macOS: Re-create window when dock icon is clicked and no other windows are open
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
@@ -18,6 +19,8 @@ app.whenReady().then(() => {
     });
 });
 
+// macOS: Apps stay open even when all windows are closed
+// Other platforms: Quit the app when all windows are closed
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
