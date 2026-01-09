@@ -57,7 +57,7 @@ async function scanFiles() {
 
             result.files.forEach((file) => {
                 const fileDiv = document.createElement("li");
-                fileDiv.className = "file";
+                fileDiv.className = "font-mono leading-7 text-sm";
                 fileDiv.textContent = file;
                 filesDiv.appendChild(fileDiv);
             });
