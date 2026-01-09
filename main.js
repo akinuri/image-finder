@@ -3,7 +3,7 @@ const { scanDirectory } = require("./utils");
 
 let mainWindow;
 
-const createWindow = () => {
+function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -12,7 +12,7 @@ const createWindow = () => {
         },
     });
     mainWindow.loadFile("index.html");
-};
+}
 
 app.whenReady().then(() => {
     // IPC handler for folder selection
