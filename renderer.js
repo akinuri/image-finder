@@ -1,13 +1,12 @@
 let selectedFolderPath = null;
 
-// Add event listeners when DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
     const dirInput = document.querySelector("#dirInput");
     const scanBtn = document.querySelector("#scanBtn");
 
     document.querySelector("#selectBtn").addEventListener("click", selectFolder);
     document.querySelector("#scanBtn").addEventListener("click", scanFiles);
-    // Enable scan button when text is entered
+
     dirInput.addEventListener("input", () => {
         scanBtn.disabled = dirInput.value.trim() === "";
         if (dirInput.value.trim()) {
