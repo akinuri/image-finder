@@ -2,12 +2,11 @@ let selectedFolderPath = null;
 
 // Add event listeners when DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
-    const dirInput = document.getElementById("dirInput");
-    const scanBtn = document.getElementById("scanBtn");
+    const dirInput = document.querySelector("#dirInput");
+    const scanBtn = document.querySelector("#scanBtn");
 
-    document.getElementById("selectBtn").addEventListener("click", selectFolder);
-    document.getElementById("scanBtn").addEventListener("click", scanFiles);
-
+    document.querySelector("#selectBtn").addEventListener("click", selectFolder);
+    document.querySelector("#scanBtn").addEventListener("click", scanFiles);
     // Enable scan button when text is entered
     dirInput.addEventListener("input", () => {
         scanBtn.disabled = dirInput.value.trim() === "";
@@ -22,28 +21,28 @@ async function selectFolder() {
         const folderPath = await window.api.selectFolder();
         if (folderPath) {
             selectedFolderPath = folderPath;
-            document.getElementById("dirInput").value = folderPath;
-            document.getElementById("scanBtn").disabled = false;
-            document.getElementById("status").textContent = "";
-            document.getElementById("files").innerHTML = "";
+            document.querySelector("#dirInput").value = folderPath;
+            document.querySelector("#scanBtn").disabled = false;
+            document.querySelector("#status").textContent = "";
+            document.querySelector("#files").innerHTML = "";
         }
     } catch (error) {
-        document.getElementById("status").textContent = `Error selecting folder: ${error.message}`;
+        document.querySelector("#status").textContent = `Error selecting folder: ${error.message}`;
     }
 }
 
 async function scanFiles() {
-    const dirInput = document.getElementById("dirInput");
+    const dirInput = document.querySelector("#dirInput");
     const currentPath = dirInput.value.trim();
 
     if (!currentPath) {
-        document.getElementById("status").textContent = "Please enter or select a folder path";
+        document.querySelector("#status").textContent = "Please enter or select a folder path";
         return;
     }
 
-    const statusDiv = document.getElementById("status");
-    const filesDiv = document.getElementById("files");
-    const scanBtn = document.getElementById("scanBtn");
+    const statusDiv = document.querySelector("#status");
+    const filesDiv = document.querySelector("#files");
+    const scanBtn = document.querySelector("#scanBtn");
 
     statusDiv.textContent = `Scanning ${currentPath}...`;
     filesDiv.innerHTML = "";
