@@ -36,12 +36,23 @@
         >Scan</button>
     </div>
 
-    <div class="bg-white shadow p-4 rounded mt-4">
-        <div id="status"></div>
-        <ul
-            id="files"
-            class="mt-4 overflow-y-auto border border-slate-300 rounded p-4 pl-10 list-decimal max-h-[calc(100vh-13rem)]"
-        ></ul>
+    <div class="bg-white shadow rounded mt-6 overflow-hidden">
+        <div class="bg-slate-200 px-4 py-2 border border-slate-300/50 border-b-0">
+            <div class="flex gap-4">
+                <div
+                    id="scannedPath"
+                    class="font-mono"
+                >___</div>
+                <div id="filesCount">(0 files)</div>
+            </div>
+        </div>
+        <div class="p-4">
+            <div id="status"></div>
+            <ul
+                id="files"
+                class="overflow-y-auto border border-slate-300 rounded p-4 pl-10 list-decimal max-h-[calc(100vh-13rem)]"
+            ></ul>
+        </div>
     </div>
 
 </body>

@@ -34,16 +34,22 @@ async function scanFiles() {
     const dirInput = document.querySelector("#dirInput");
     const currentPath = dirInput.value.trim();
 
+    const scannedPathEl = document.querySelector("#scannedPath");
+    scannedPathEl.textContent = currentPath;
+
+    const filesCountEl = document.querySelector("#filesCount");
+
     if (!currentPath) {
         document.querySelector("#status").textContent = "Please enter or select a folder path";
         return;
     }
 
-    const statusDiv = document.querySelector("#status");
+    // TODO: handle status
+    // const statusDiv = document.querySelector("#status");
     const filesDiv = document.querySelector("#files");
     const scanBtn = document.querySelector("#scanBtn");
 
-    statusDiv.textContent = `Scanning ${currentPath}...`;
+    // statusDiv.textContent = `Scanning ${currentPath}...`;
     filesDiv.innerHTML = "";
     scanBtn.disabled = true;
 
@@ -51,7 +57,8 @@ async function scanFiles() {
         const result = await window.api.scanFiles(currentPath);
 
         if (result.success) {
-            statusDiv.textContent = `Found ${result.files.length} files:`;
+            // statusDiv.textContent = `Found ${result.files.length} files:`;
+            filesCountEl.textContent = `(${result.files.length} files)`;
 
             result.files.forEach((file) => {
                 const fileDiv = document.createElement("li");
@@ -60,10 +67,10 @@ async function scanFiles() {
                 filesDiv.appendChild(fileDiv);
             });
         } else {
-            statusDiv.textContent = `Error: ${result.error}`;
+            // statusDiv.textContent = `Error: ${result.error}`;
         }
     } catch (error) {
-        statusDiv.textContent = `Error: ${error.message}`;
+        // statusDiv.textContent = `Error: ${error.message}`;
     } finally {
         scanBtn.disabled = false;
     }
