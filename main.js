@@ -21,7 +21,6 @@ app.whenReady().then(() => {
             properties: ["openDirectory"],
             title: "Select Folder to Scan",
         });
-
         if (!result.canceled && result.filePaths.length > 0) {
             return result.filePaths[0];
         }
@@ -31,7 +30,7 @@ app.whenReady().then(() => {
     // IPC handler for scanning files
     ipcMain.handle("scan-files", async (event, folderPath) => {
         try {
-            const files = await scanDirectory(folderPath || "C:\\php");
+            const files = await scanDirectory(folderPath);
             return { success: true, files };
         } catch (error) {
             return { success: false, error: error.message };
