@@ -57,8 +57,8 @@ async function scanFiles() {
         const result = await window.api.scanFiles(currentPath);
 
         if (result.success) {
-            // statusDiv.textContent = `Found ${result.files.length} files:`;
-            filesCountEl.textContent = `(${result.files.length} files)`;
+            // statusDiv.textContent = `Found ${result.files.length} images:`;
+            filesCountEl.textContent = `(${result.files.length} images)`;
 
             result.files.forEach((file) => {
                 const fileDiv = document.createElement("li");

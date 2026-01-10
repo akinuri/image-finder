@@ -2,6 +2,20 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 async function scanDirectory(dirPath) {
+    const imageExtensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".bmp",
+        ".webp",
+        ".svg",
+        ".tiff",
+        ".tif",
+        ".ico",
+        ".heic",
+        ".heif",
+    ];
     const files = [];
     async function scan(currentPath) {
         try {
@@ -11,7 +25,10 @@ async function scanDirectory(dirPath) {
                 if (entry.isDirectory()) {
                     await scan(fullPath);
                 } else if (entry.isFile()) {
-                    files.push(fullPath);
+                    const fileExt = path.extname(entry.name).toLowerCase();
+                    if (imageExtensions.includes(fileExt)) {
+                        files.push(fullPath);
+                    }
                 }
             }
         } catch (error) {
