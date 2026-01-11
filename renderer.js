@@ -60,10 +60,10 @@ async function scanFiles() {
             // statusDiv.textContent = `Found ${result.files.length} images:`;
             filesCountEl.textContent = `(${result.files.length} images)`;
 
-            result.files.forEach((file) => {
+            result.files.forEach((filePath) => {
                 const fileDiv = document.createElement("li");
                 fileDiv.className = "font-mono leading-7 text-[13px]";
-                fileDiv.textContent = file;
+                fileDiv.textContent = filePath;
                 filesDiv.appendChild(fileDiv);
             });
         } else {
