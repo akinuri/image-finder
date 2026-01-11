@@ -63,7 +63,7 @@ async function scanFiles() {
             result.files.forEach((filePath) => {
                 const imageItem = document.createElement("div");
                 imageItem.className =
-                    "flex flex-col items-center border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 hover:border-blue-300 transition-colors";
+                    "flex flex-col items-center border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 hover:border-blue-300 transition-colors user-select-none cursor-pointer";
                 imageItem.title = filePath;
 
                 const img = document.createElement("img");
@@ -82,6 +82,14 @@ async function scanFiles() {
                     imageItem.insertBefore(errorDiv, img);
                 }
                 img.onerror = showImageError;
+
+                imageItem.addEventListener("dblclick", async () => {
+                    try {
+                        await window.api.showItemInFolder(filePath);
+                    } catch (error) {
+                        console.error("Failed to open folder:", error);
+                    }
+                });
 
                 const filenameDiv = document.createElement("div");
                 filenameDiv.className =

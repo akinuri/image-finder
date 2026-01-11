@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron/main");
 const { scanDirectory } = require("./utils");
 
 let mainWindow;
@@ -37,6 +37,15 @@ app.whenReady().then(() => {
         }
     });
 
+    // IPC handler for opening file in folder
+    ipcMain.handle("show-item-in-folder", async (event, filePath) => {
+        try {
+            shell.showItemInFolder(filePath);
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
     createWindow();
 
     // macOS: Re-create window when dock icon is clicked and no other windows are open
