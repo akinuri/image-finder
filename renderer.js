@@ -60,7 +60,7 @@ async function scanFiles() {
             // statusDiv.textContent = `Found ${result.files.length} images:`;
             filesCountEl.textContent = `(${result.files.length} images)`;
 
-            result.files.forEach((filePath) => {
+            result.files.forEach(async (filePath) => {
                 const imageItem = document.createElement("div");
                 imageItem.className =
                     "flex flex-col items-center border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 hover:border-blue-300 transition-colors user-select-none cursor-pointer";
@@ -68,10 +68,33 @@ async function scanFiles() {
 
                 const img = document.createElement("img");
                 img.className = "w-28 h-28 object-cover rounded";
-                img.src = `file://${filePath}`;
 
                 const filename = filePath.split(/[\\/]/).pop();
                 img.alt = filename;
+
+                // TODO: redesign placeholder
+                img.src =
+                    "data:image/svg+xml;base64," +
+                    btoa(`
+                    <svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="256" height="256" fill="#f0f0f0"/>
+                        <text x="128" y="140" text-anchor="middle" font-size="32" fill="#999">Loading...</text>
+                    </svg>
+                `);
+
+                // TODO: gen thumb when image is huge
+                const cacheKey = filePath;
+                if (window.thumbnails.cache.has(cacheKey)) {
+                    img.src = window.thumbnails.cache.get(cacheKey);
+                } else {
+                    try {
+                        const thumbnailData = await window.thumbnails.generate(filePath);
+                        window.thumbnails.cache.set(cacheKey, thumbnailData);
+                        img.src = thumbnailData;
+                    } catch (error) {
+                        showImageError();
+                    }
+                }
 
                 function showImageError() {
                     img.style.display = "none";
