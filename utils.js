@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-async function isImageFile(filePath) {
+async function getImageFormat(filePath) {
     try {
         const buffer = Buffer.alloc(12);
         const fileHandle = await fs.promises.open(filePath, "r");
@@ -10,25 +10,17 @@ async function isImageFile(filePath) {
 
         const hex = buffer.toString("hex").toLowerCase();
 
-        // JPEG: FF D8 FF
-        if (hex.startsWith("ffd8ff")) return true;
+        if (hex.startsWith("ffd8ff")) return "jpeg";
+        if (hex.startsWith("89504e470d0a1a0a")) return "png";
+        if (hex.startsWith("47494638")) return "gif";
+        if (hex.startsWith("424d")) return "bmp";
+        if (hex.startsWith("52494646") && hex.includes("57454250")) return "webp";
+        if (hex.startsWith("49492a00") || hex.startsWith("4d4d002a")) return "tiff";
 
-        // PNG: 89 50 4E 47 0D 0A 1A 0A
-        if (hex.startsWith("89504e470d0a1a0a")) return true;
-
-        // GIF: 47 49 46 38 (GIF8)
-        if (hex.startsWith("47494638")) return true;
-
-        // BMP: 42 4D
-        if (hex.startsWith("424d")) return true;
-
-        // WebP: RIFF....WEBP (52494646....57454250)
-        if (hex.startsWith("52494646") && hex.includes("57454250")) return true;
-
-        // TIFF: 49 49 2A 00 (little endian) or 4D 4D 00 2A (big endian)
-        if (hex.startsWith("49492a00") || hex.startsWith("4d4d002a")) return true;
-    } catch (error) {}
-    return false;
+        return null;
+    } catch (error) {
+        return null;
+    }
 }
 
 async function scanDirectory(dirPath) {
@@ -58,7 +50,7 @@ async function scanDirectory(dirPath) {
                     const fileExt = path.extname(entry.name).toLowerCase();
                     let isImage = imageExtensions.includes(fileExt);
                     if (!isImage && fileExt === "") {
-                        isImage = await isImageFile(fullPath);
+                        isImage = (await getImageFormat(fullPath)) !== null;
                     }
                     if (isImage) {
                         files.push(fullPath);
@@ -73,4 +65,4 @@ async function scanDirectory(dirPath) {
     return files;
 }
 
-module.exports = { scanDirectory, isImageFile };
+module.exports = { scanDirectory, getImageFormat };
