@@ -137,7 +137,10 @@ async function scanDirectory(dirPath) {
                         isImage = imageData.format !== null;
                     }
                     if (isImage) {
-                        files.push(fullPath);
+                        if (!imageData) {
+                            imageData = await getImageData(fullPath);
+                        }
+                        files.push(imageData);
                     }
                 }
             }

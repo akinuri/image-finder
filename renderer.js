@@ -60,16 +60,16 @@ async function scanFiles() {
             // statusDiv.textContent = `Found ${result.files.length} images:`;
             filesCountEl.textContent = `(${result.files.length} images)`;
 
-            result.files.forEach(async (filePath) => {
+            result.files.forEach(async (fileData) => {
                 const imageItem = document.createElement("div");
                 imageItem.className =
                     "flex flex-col items-center border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 hover:border-blue-300 transition-colors user-select-none cursor-pointer";
-                imageItem.title = filePath;
+                imageItem.title = fileData.path;
 
                 const img = document.createElement("img");
                 img.className = "w-28 h-28 object-cover rounded";
 
-                const filename = filePath.split(/[\\/]/).pop();
+                const filename = fileData.name;
                 img.alt = filename;
 
                 // TODO: redesign placeholder
@@ -83,12 +83,12 @@ async function scanFiles() {
                 `);
 
                 // TODO: gen thumb when image is huge
-                const cacheKey = filePath;
+                const cacheKey = fileData.path;
                 if (window.thumbnails.cache.has(cacheKey)) {
                     img.src = window.thumbnails.cache.get(cacheKey);
                 } else {
                     try {
-                        const thumbnailData = await window.thumbnails.generate(filePath);
+                        const thumbnailData = await window.thumbnails.generate(fileData.path);
                         window.thumbnails.cache.set(cacheKey, thumbnailData);
                         img.src = thumbnailData;
                     } catch (error) {
@@ -108,7 +108,7 @@ async function scanFiles() {
 
                 imageItem.addEventListener("dblclick", async () => {
                     try {
-                        await window.api.showItemInFolder(filePath);
+                        await window.api.showItemInFolder(fileData.path);
                     } catch (error) {
                         console.error("Failed to open folder:", error);
                     }
