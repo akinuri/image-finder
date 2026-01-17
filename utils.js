@@ -5,7 +5,7 @@ async function getImageData(filePath) {
     let data = {
         path: filePath,
         name: path.basename(filePath),
-        ext: path.extname(filePath).toLowerCase(),
+        extension: path.extname(filePath).toLowerCase(),
         format: null,
         width: null,
         height: null,
