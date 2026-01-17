@@ -36,23 +36,27 @@
         >Scan</button>
     </div>
 
-    <div class="bg-white shadow rounded mt-6 overflow-hidden">
-        <div class="bg-slate-200 px-4 py-2 border border-slate-300/50 border-b-0">
-            <div class="flex gap-4">
+    <div class="flex gap-4 mt-6">
+
+        <div class="bg-white shadow rounded overflow-hidden grow">
+            <div class="bg-slate-200 px-4 py-2 border border-slate-300/50 border-b-0">
+                <div class="flex gap-4">
+                    <div
+                        id="scannedPath"
+                        class="font-mono"
+                    >___</div>
+                    <div id="filesCount">(0 images)</div>
+                </div>
+            </div>
+            <div class="p-4">
+                <div id="status"></div>
                 <div
-                    id="scannedPath"
-                    class="font-mono"
-                >___</div>
-                <div id="filesCount">(0 images)</div>
+                    id="files"
+                    class="overflow-y-auto border border-slate-300 rounded p-4 max-h-[calc(100vh-13rem)] grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4"
+                ></div>
             </div>
         </div>
-        <div class="p-4">
-            <div id="status"></div>
-            <div
-                id="files"
-                class="overflow-y-auto border border-slate-300 rounded p-4 max-h-[calc(100vh-13rem)] grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4"
-            ></div>
-        </div>
+
     </div>
 
 </body>
