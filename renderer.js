@@ -123,6 +123,8 @@ async function scanFiles() {
                 imageItem.appendChild(filenameDiv);
                 filesDiv.appendChild(imageItem);
             });
+
+            populateTypeFilterOptions(result.files);
         } else {
             // statusDiv.textContent = `Error: ${result.error}`;
         }
@@ -131,4 +133,33 @@ async function scanFiles() {
     } finally {
         scanBtn.disabled = false;
     }
+}
+
+function populateTypeFilterOptions(files) {
+    let typeFilterList = document.querySelector("#type-filter-list");
+    while (typeFilterList.firstChild) {
+        typeFilterList.removeChild(typeFilterList.firstChild);
+    }
+    let types = {};
+    files.forEach((fileData) => {
+        types[fileData.extension] = (types[fileData.extension] || 0) + 1;
+    });
+    let typesSorted = Object.keys(types).sort((a, b) => a.localeCompare(b));
+    typesSorted.forEach((extension) => {
+        let count = types[extension];
+        let li = document.createElement("li");
+        li.innerHTML = `
+            <label class="flex gap-2 justify-between w-full hover:bg-slate-200 rounded p-[2px] pl-2 select-none">
+                <div>
+                    <input
+                        type="checkbox"
+                        value="${extension}"
+                    >
+                    <span>${extension}</span>
+                </div>
+                <span class="text-black/30 mr-1">(${count})</span>
+            </label>
+        `;
+        typeFilterList.appendChild(li);
+    });
 }
