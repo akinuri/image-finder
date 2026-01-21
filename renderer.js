@@ -65,6 +65,7 @@ async function scanFiles() {
                 imageItem.className =
                     "flex flex-col items-center border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 hover:border-blue-300 transition-colors user-select-none cursor-pointer";
                 imageItem.title = fileData.path;
+                imageItem._fileData = fileData;
 
                 const img = document.createElement("img");
                 img.className = "w-28 h-28 object-cover rounded";
@@ -160,6 +161,25 @@ function populateTypeFilterOptions(files) {
                 <span class="text-black/30 mr-1">(${count})</span>
             </label>
         `;
+        li.querySelector("input").addEventListener("change", filterImages);
         typeFilterList.appendChild(li);
     });
+}
+
+function filterImages() {
+    let filteredTypes = Array.from(document.querySelectorAll("#type-filter-list input[type='checkbox']:checked")).map(
+        (input) => input.value,
+    );
+
+    let filesEl = document.querySelector("#files");
+    for (let imageItem of filesEl.children) {
+        let fileData = imageItem._fileData;
+        let show = true;
+        if (filteredTypes.length > 0) {
+            if (!filteredTypes.includes(fileData.extension)) {
+                show = false;
+            }
+        }
+        imageItem.hidden = !show;
+    }
 }
