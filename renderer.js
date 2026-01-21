@@ -69,6 +69,7 @@ async function scanFiles() {
 
                 const img = document.createElement("img");
                 img.className = "w-28 h-28 object-cover rounded";
+                imageItem.appendChild(img);
 
                 const filename = fileData.name;
                 img.alt = filename;
@@ -120,7 +121,6 @@ async function scanFiles() {
                     "text-xs text-center text-gray-600 break-words max-w-full mt-2 whitespace-nowrap overflow-hidden text-ellipsis";
                 filenameDiv.textContent = filename;
 
-                imageItem.appendChild(img);
                 imageItem.appendChild(filenameDiv);
                 filesDiv.appendChild(imageItem);
             });
