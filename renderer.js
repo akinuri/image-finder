@@ -127,6 +127,7 @@ async function scanFiles() {
 
             populateTypeFilterOptions(result.files);
             populateWidthFilterOptions(result.files);
+            populateHeightFilterOptions(result.files);
         } else {
             // statusDiv.textContent = `Error: ${result.error}`;
         }
@@ -204,11 +205,51 @@ function populateWidthFilterOptions(files) {
     });
 }
 
+function populateHeightFilterOptions(files) {
+    let heightFilterList = document.querySelector("#height-filter-list");
+    while (heightFilterList.firstChild) {
+        heightFilterList.removeChild(heightFilterList.firstChild);
+    }
+    let heights = {};
+    files.forEach((fileData) => {
+        heights[fileData.height] = (heights[fileData.height] || 0) + 1;
+    });
+    if ("null" in heights) {
+        heights[""] = heights["null"];
+        delete heights["null"];
+    }
+    let heightsSorted = Object.keys(heights).sort((a, b) => a.localeCompare(b));
+    heightsSorted.forEach((height) => {
+        let count = heights[height];
+        let li = document.createElement("li");
+        if (height == "null") {
+            height = "";
+        }
+        li.innerHTML = `
+            <label class="flex gap-2 justify-between w-full hover:bg-slate-200 rounded p-[2px] pl-2 select-none">
+                <div>
+                    <input
+                        type="checkbox"
+                        value="${height}"
+                    >
+                    <span>${height}</span>
+                </div>
+                <span class="text-black/30 mr-1">(${count})</span>
+            </label>
+        `;
+        li.querySelector("input").addEventListener("change", filterImages);
+        heightFilterList.appendChild(li);
+    });
+}
+
 function filterImages() {
     let filteredTypes = Array.from(document.querySelectorAll("#type-filter-list input[type='checkbox']:checked")).map(
         (input) => input.value,
     );
     let filteredWidths = Array.from(document.querySelectorAll("#width-filter-list input[type='checkbox']:checked")).map(
+        (input) => parseInt(input.value, 10) || null,
+    );
+    let filteredHeights = Array.from(document.querySelectorAll("#height-filter-list input[type='checkbox']:checked")).map(
         (input) => parseInt(input.value, 10) || null,
     );
     let filesEl = document.querySelector("#files");
@@ -222,6 +263,11 @@ function filterImages() {
         }
         if (filteredWidths.length > 0) {
             if (!filteredWidths.includes(fileData.width)) {
+                show = false;
+            }
+        }
+        if (filteredHeights.length > 0) {
+            if (!filteredHeights.includes(fileData.height)) {
                 show = false;
             }
         }
