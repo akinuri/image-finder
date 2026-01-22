@@ -126,6 +126,7 @@ async function scanFiles() {
             });
 
             populateTypeFilterOptions(result.files);
+            populateWidthFilterOptions(result.files);
         } else {
             // statusDiv.textContent = `Error: ${result.error}`;
         }
@@ -166,17 +167,61 @@ function populateTypeFilterOptions(files) {
     });
 }
 
+function populateWidthFilterOptions(files) {
+    let widthFilterList = document.querySelector("#width-filter-list");
+    while (widthFilterList.firstChild) {
+        widthFilterList.removeChild(widthFilterList.firstChild);
+    }
+    let widths = {};
+    files.forEach((fileData) => {
+        widths[fileData.width] = (widths[fileData.width] || 0) + 1;
+    });
+    if ("null" in widths) {
+        widths[""] = widths["null"];
+        delete widths["null"];
+    }
+    let widthsSorted = Object.keys(widths).sort((a, b) => a.localeCompare(b));
+    widthsSorted.forEach((width) => {
+        let count = widths[width];
+        let li = document.createElement("li");
+        if (width == "null") {
+            width = "";
+        }
+        li.innerHTML = `
+            <label class="flex gap-2 justify-between w-full hover:bg-slate-200 rounded p-[2px] pl-2 select-none">
+                <div>
+                    <input
+                        type="checkbox"
+                        value="${width}"
+                    >
+                    <span>${width}</span>
+                </div>
+                <span class="text-black/30 mr-1">(${count})</span>
+            </label>
+        `;
+        li.querySelector("input").addEventListener("change", filterImages);
+        widthFilterList.appendChild(li);
+    });
+}
+
 function filterImages() {
     let filteredTypes = Array.from(document.querySelectorAll("#type-filter-list input[type='checkbox']:checked")).map(
         (input) => input.value,
     );
-
+    let filteredWidths = Array.from(document.querySelectorAll("#width-filter-list input[type='checkbox']:checked")).map(
+        (input) => parseInt(input.value, 10) || null,
+    );
     let filesEl = document.querySelector("#files");
     for (let imageItem of filesEl.children) {
         let fileData = imageItem._fileData;
         let show = true;
         if (filteredTypes.length > 0) {
             if (!filteredTypes.includes(fileData.extension)) {
+                show = false;
+            }
+        }
+        if (filteredWidths.length > 0) {
+            if (!filteredWidths.includes(fileData.width)) {
                 show = false;
             }
         }
