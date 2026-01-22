@@ -6,7 +6,7 @@ let mainWindow;
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1024,
-        height: 768 + 50,
+        height: 768 + 50 + 10,
         webPreferences: {
             preload: require("path").join(__dirname, "preload.js"),
         },
