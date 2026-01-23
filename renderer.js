@@ -128,6 +128,7 @@ async function scanFiles() {
             populateTypeFilterOptions(result.files);
             populateWidthFilterOptions(result.files);
             populateHeightFilterOptions(result.files);
+            populateSizeFilterOptions(result.files);
         } else {
             // statusDiv.textContent = `Error: ${result.error}`;
         }
@@ -242,6 +243,43 @@ function populateHeightFilterOptions(files) {
     });
 }
 
+function populateSizeFilterOptions(files) {
+    let sizeFilterList = document.querySelector("#size-filter-list");
+    while (sizeFilterList.firstChild) {
+        sizeFilterList.removeChild(sizeFilterList.firstChild);
+    }
+    let sizes = {};
+    files.forEach((fileData) => {
+        sizes[fileData.size] = (sizes[fileData.size] || 0) + 1;
+    });
+    if ("null" in sizes) {
+        sizes[""] = sizes["null"];
+        delete sizes["null"];
+    }
+    let sizesSorted = Object.keys(sizes).sort((a, b) => a.localeCompare(b));
+    sizesSorted.forEach((size) => {
+        let count = sizes[size];
+        let li = document.createElement("li");
+        if (size == "null") {
+            size = "";
+        }
+        li.innerHTML = `
+            <label class="flex gap-2 justify-between w-full hover:bg-slate-200 rounded p-[2px] pl-2 select-none">
+                <div>
+                    <input
+                        type="checkbox"
+                        value="${size}"
+                    >
+                    <span>${size}</span>
+                </div>
+                <span class="text-black/30 mr-1">(${count})</span>
+            </label>
+        `;
+        li.querySelector("input").addEventListener("change", filterImages);
+        sizeFilterList.appendChild(li);
+    });
+}
+
 function filterImages() {
     let filteredTypes = Array.from(document.querySelectorAll("#type-filter-list input[type='checkbox']:checked")).map(
         (input) => input.value,
@@ -251,6 +289,9 @@ function filterImages() {
     );
     let filteredHeights = Array.from(document.querySelectorAll("#height-filter-list input[type='checkbox']:checked")).map(
         (input) => parseInt(input.value, 10) || null,
+    );
+    let filteredSizes = Array.from(document.querySelectorAll("#size-filter-list input[type='checkbox']:checked")).map(
+        (input) => parseFloat(input.value) || 0,
     );
     let filesEl = document.querySelector("#files");
     for (let imageItem of filesEl.children) {
@@ -268,6 +309,11 @@ function filterImages() {
         }
         if (filteredHeights.length > 0) {
             if (!filteredHeights.includes(fileData.height)) {
+                show = false;
+            }
+        }
+        if (filteredSizes.length > 0) {
+            if (!filteredSizes.includes(fileData.size)) {
                 show = false;
             }
         }

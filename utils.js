@@ -9,12 +9,16 @@ async function getImageData(filePath) {
         format: null,
         width: null,
         height: null,
+        size: null,
     };
     try {
         const buffer = Buffer.alloc(30);
         const fileHandle = await fs.promises.open(filePath, "r");
         await fileHandle.read(buffer, 0, 30, 0);
         await fileHandle.close();
+        
+        const stats = await fs.promises.stat(filePath);
+        data.size = parseFloat((stats.size / (1024 * 1024)).toFixed(2)); // size in MB
 
         const hex = buffer.toString("hex").toLowerCase();
 
